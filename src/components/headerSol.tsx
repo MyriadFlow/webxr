@@ -29,8 +29,8 @@ const Header = ({
   const [isScrolled, setIsScrolled] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
-  //   const { isConnected, address } = useAccount();
-  //   const { connect, connectors } = useConnect();
+//   const { isConnected, address } = useAccount();
+//   const { connect, connectors } = useConnect();
   //   const { disconnect } = useDisconnect();
   const [storedAddress, setStoredAddress] = useState<string | null>(null);
   const pathname = usePathname();
@@ -39,12 +39,10 @@ const Header = ({
   const [profileImage, setProfileImage] = useState("");
   const [username, setUserName] = useState("");
   const menuRef = useRef<HTMLDivElement>(null);
-  const [isClient, setIsClient] = useState(false);
 
   const wallets = [new PhantomWalletAdapter()];
   const baseUri = process.env.NEXT_PUBLIC_URI || "https://app.myriadflow.com";
   useEffect(() => {
-    setIsClient(true);
     const savedWallet = localStorage.getItem("solana_wallet_adapter");
     setStoredAddress(savedWallet);
 
@@ -128,7 +126,7 @@ const Header = ({
   const getLinkColor = (path: any) => {
     return pathname === path ? "#000" : isScrolled ? "white" : "black";
   };
-  if (!isClient) return null;
+
   return (
     <>
       <div
@@ -314,7 +312,7 @@ const Header = ({
                   </div>
                 </>
               ) : (
-                <button className="text-xl">
+                <button  className="text-xl">
                   <WalletMultiButton />
                 </button>
               )}
