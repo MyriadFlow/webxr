@@ -1,10 +1,18 @@
 import { useConversation } from '@11labs/react'
 import { useCallback, useState, useEffect } from 'react'
 import { Mic, MicOff, StopCircle } from 'lucide-react'
-// import { ElevenLabsClient } from 'elevenlabs'
+import { getOnChainTools } from '@goat-sdk/adapter-eleven-labs'
 import { useQuery } from '@tanstack/react-query'
 import { PhygitalType, BrandType, CollectionType } from '@/types/types'
 import { getCollections, getBrands } from '@/utils/queries'
+import {
+	useDynamicContext,
+	DynamicWidget,
+	useIsLoggedIn,
+} from '@dynamic-labs/sdk-react-core'
+import { coingecko } from '@goat-sdk/plugin-coingecko'
+import { createSolanaWalletFromDynamic } from '@/utils'
+import { isSolanaWallet } from '@dynamic-labs/solana'
 
 export const VoiceAsssitantEleven = ({
 	phygital,
@@ -14,8 +22,14 @@ export const VoiceAsssitantEleven = ({
 	voice: string
 }) => {
 	const [isSpeaking, setIsSpeaking] = useState(false)
+	const { primaryWallet, sdkHasLoaded } = useDynamicContext()
 
-	// console.log(voice)
+	const isConnected = sdkHasLoaded && primaryWallet
+	// console.log(isConnected)
+	// console.log(primaryWallet)
+	// console.log(sdkHasLoaded)
+	// console.log(isSolanaWallet(primaryWallet))
+	// console.log(isSolanaWallet)
 
 	const getVoices = (voice: string) => {
 		if (voice.toLowerCase() === 'denise') {
@@ -108,10 +122,39 @@ export const VoiceAsssitantEleven = ({
 			await navigator.mediaDevices.getUserMedia({ audio: true })
 			setIsSpeaking(true)
 
+			if (!primaryWallet) {
+				throw new Error('Wallet not connected')
+			}
+
+			let tools = null
+
+			if (isSolanaWallet(primaryWallet)) {
+				const connection = await primaryWallet.getConnection()
+				const signer = await primaryWallet.getSigner()
+
+				tools = await getOnChainTools({
+					wallet: createSolanaWalletFromDynamic(connection, signer),
+					plugins: [
+						coingecko({
+							apiKey: process.env.NEXT_PUBLIC_COINGECKO_API_KEY ?? '',
+						}),
+					],
+				})
+			} else {
+				throw new Error('Unsupported wallet type')
+			}
+
+			if (!tools) {
+				throw new Error('Failed to initialize tools')
+			}
+
+			console.log('tools', tools)
+
 			// Start the conversation with your agent
 
 			await conversation.startSession({
 				agentId: process.env.NEXT_PUBLIC_ELEVENLABS_AGENTID!, // Replace with your agent ID
+				clientTools: tools,
 			})
 		} catch (error) {
 			console.error('Failed to start conversation:', error)

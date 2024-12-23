@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { toast, ToastContainer } from 'react-toastify'
-import { useAccount, useDisconnect, useConnect } from 'wagmi'
+import { useAccount, useDisconnect } from 'wagmi'
 import { BadgeInfo, Menu } from 'lucide-react'
 import { clusterApiUrl, Connection, PublicKey } from '@solana/web3.js'
 import { useWallet } from '@solana/wallet-adapter-react'
@@ -35,6 +35,7 @@ const Header = ({
 	const menuRef = useRef<HTMLDivElement>(null)
 
 	const wallet = useWallet()
+
 	const { publicKey, connected } = wallet
 	const connection = new Connection(clusterApiUrl('devnet'))
 	const metaplex = useMemo(() => {
@@ -104,19 +105,11 @@ const Header = ({
 
 	const Notification = () => {
 		if (!address) {
-			toast.warning(
-				'Currently works with Metamask and Coinbase Wallet Extension. We are working on Smart Wallet functionality.',
-				{
-					containerId: 'containerA',
-					position: 'top-left',
-				}
-			)
+			toast.warning('Currently works with Get Phanthom Wallet Extension.', {
+				containerId: 'containerA',
+				position: 'top-left',
+			})
 		}
-	}
-
-	const handleLogout = () => {
-		localStorage.removeItem('walletAddress')
-		disconnect()
 	}
 
 	const getLinkColor = (path: any) => {
@@ -277,12 +270,7 @@ const Header = ({
 													Profile Settings
 												</Link>
 												<div className='border-t border-gray-200 my-2'></div>
-												<button
-													onClick={handleLogout}
-													className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 w-full text-left'
-												>
-													Log out
-												</button>
+
 												<div className='mt-2 flex items-center justify-between px-4 py-2 text-xs text-gray-500'>
 													<span className='flex-1 truncate'>{address}</span>
 													<button

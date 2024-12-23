@@ -10,6 +10,12 @@
 	},
 	"dependencies": {
 		"@11labs/react": "^0.0.4",
+		"@dynamic-labs/sdk-react-core": "^3.9.5",
+		"@dynamic-labs/solana": "^3.9.5",
+		"@dynamic-labs/solana-core": "^3.9.5",
+		"@goat-sdk/adapter-eleven-labs": "^0.2.0",
+		"@goat-sdk/plugin-coingecko": "^0.2.0",
+		"@goat-sdk/wallet-solana": "^0.2.4",
 		"@metaplex-foundation/js": "^0.20.1",
 		"@pinecone-database/pinecone": "^4.0.0",
 		"@rainbow-me/rainbowkit": "^2.1.3",

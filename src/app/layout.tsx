@@ -9,6 +9,7 @@ import Script from 'next/script'
 import { ToastContainer } from 'react-toastify'
 import { cookieToInitialState } from 'wagmi'
 import { config } from '@/lib/wagmi'
+import { GoatProvider } from '@/components/goat-provider'
 
 const fontSans = FontSans({
 	subsets: ['latin'],
@@ -62,7 +63,7 @@ export default function RootLayout({
 				>
 					<ToastContainer />
 
-					{children}
+					<GoatProvider>{children}</GoatProvider>
 
 					<ReactQueryDevtools />
 				</body>
